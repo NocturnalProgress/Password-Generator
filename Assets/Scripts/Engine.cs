@@ -1,29 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using TMPro;
 
 public class Engine : MonoBehaviour
 {
-    public Toggle includeUppercase;
-    public Toggle includeLowercase;
-    public Toggle includeNumbers;
-    public Toggle includeSymbols;
+    public Toggle includeUppercase, includeLowercase, includeNumbers, includeSymbols;
 
     public Slider passwordLengthSlider;
 
     public string generatedPassword;
 
-    public TMP_InputField passwordLengthDisplay;
+    public TMP_InputField passwordLengthDisplay, generatedPasswordInputField;
 
-    public TMP_InputField generatedPasswordInputField;
-
-    public List<string> passwordHistoryList = new List<string>();
-
-    public GameObject previousPasswordPrefab;
-
-    public GameObject passwordHistoryScrollView;
+    public GameObject previousPasswordPrefab, passwordHistoryScrollView;
 
     private int passwordLength = 6;
 
@@ -44,7 +35,6 @@ public class Engine : MonoBehaviour
             switch (randomNumber)
             {
                 case 4: // Checks if the Toggle for Uppercase Letters is on.
-                        // Debug.Log(uppercaseLetterList[Random.Range(0, uppercaseLetterList.Count)]);
                     if (includeUppercase.isOn)
                     {
                         generatedPassword += uppercaseLetterList[Random.Range(0, uppercaseLetterList.Count)];
@@ -52,7 +42,6 @@ public class Engine : MonoBehaviour
                     break;
 
                 case 3: // Checks if the Toggle for Lowercase Letters is on.
-                        // Debug.Log(lowercaseLettersList[Random.Range(0, lowercaseLettersList.Count)]);
                     if (includeLowercase.isOn)
                     {
                         generatedPassword += lowercaseLettersList[Random.Range(0, lowercaseLettersList.Count)];
@@ -60,7 +49,6 @@ public class Engine : MonoBehaviour
                     break;
 
                 case 2: // Checks if the Toggle for Numbers is on.
-                        // Debug.Log(numbersList[Random.Range(0, numbersList.Count)]);
                     if (includeNumbers.isOn)
                     {
                         generatedPassword += numbersList[Random.Range(0, numbersList.Count)];
@@ -68,22 +56,19 @@ public class Engine : MonoBehaviour
                     break;
 
                 case 1: // Checks if the Toggle for Symbols is on.
-                        // Debug.Log(symbolsList[Random.Range(0, symbolsList.Count)]);
                     if (includeSymbols.isOn)
                     {
                         generatedPassword += symbolsList[Random.Range(0, symbolsList.Count)];
                     }
                     break;
 
-                default:
-                    Debug.Log("Uh what?"); // This shouldn't ever happen but who knows what could occur when someone is using this.
+                default: // This shouldn't ever happen but who knows what could occur when someone is using this. (Also a default case is required.)
+                    Debug.Log("Uh what?");
                     break;
             }
         }
-        generatedPasswordInputField.text = generatedPassword;
-        savePreviousPassword();
-        passwordHistoryList.Add(generatedPassword);
-        Debug.Log(generatedPassword);
+        generatedPasswordInputField.text = generatedPassword; // Outputs the newly generated password to the "Generated Password" InputField.
+        savePreviousPassword(); // Calls the function to instantiate a prefab
     }
 
     public void setPasswordLengthDisplay() // Sets the Password Length Input Field to the value of the Slider. (This function is called every time the Slider is moved.)
@@ -108,11 +93,22 @@ public class Engine : MonoBehaviour
         }
     }
 
+    public void toggleCheck() // Checks if all Toggles are off at the same time. If they are then they reset.
+    {
+        if (!includeUppercase.isOn && !includeLowercase.isOn && !includeNumbers.isOn && !includeSymbols.isOn)
+        {
+            includeUppercase.isOn = true;
+            includeLowercase.isOn = true;
+            includeNumbers.isOn = true;
+            includeSymbols.isOn = true;
+        }
+    }
+
     public void savePreviousPassword() // Creates a prefab which lets the user see their previously generated passwords.
     {
-        GameObject previousPassword = Instantiate(previousPasswordPrefab, new Vector3(0, 0, 0), transform.rotation) as GameObject;
-        previousPassword.transform.SetParent(passwordHistoryScrollView.transform, false);
-        previousPassword.transform.localScale = new Vector3(1, 1, 1);
-        previousPassword.GetComponentInChildren<TMP_InputField>().text = generatedPassword;
+        GameObject previousPassword = Instantiate(previousPasswordPrefab, new Vector3(0, 0, 0), transform.rotation) as GameObject; // Creates a Previous Password Prefab
+        previousPassword.transform.SetParent(passwordHistoryScrollView.transform, false); // Sets the parent of the new gameobject to the "Content" GameObject under the ScrollView.
+        previousPassword.transform.localScale = new Vector3(1, 1, 1); // Ensures that the scale of the GameObject is (1, 1, 1)
+        previousPassword.GetComponentInChildren<TMP_InputField>().text = generatedPassword; // Sets the current password to the InputField of the prefab so that it can be saved and another password can be generated.
     }
 }
