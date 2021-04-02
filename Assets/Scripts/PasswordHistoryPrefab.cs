@@ -11,12 +11,12 @@ public class PasswordHistoryPrefab : MonoBehaviour
 
     private void Start()
     {
-        previousPasswordInputField = GetComponentInChildren<TMP_InputField>();
-        revealPreviousPasswordButton = GetComponent<Button>();
-        GetComponentInChildren<Button>().onClick.AddListener(revealSavedPassword);
+        previousPasswordInputField = GetComponentInChildren<TMP_InputField>(); // Locates the InputField so its ContentType can be altered.
+        revealPreviousPasswordButton = GetComponent<Button>(); // Locates the button so that functions can be added.
+        GetComponentInChildren<Button>().onClick.AddListener(revealSavedPassword); // Adds revealSavedPassword() to the button located next to previously generated password.
     }
 
-    public void revealSavedPassword() // This function allows the user to reveal previously generated passwords
+    public void revealSavedPassword() // This function allows the user to reveal previously generated passwords. By setting the ContentType to "Standard", this will display the password.
     {
         if (previousPasswordInputField.contentType == TMP_InputField.ContentType.Password)
         {
